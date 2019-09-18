@@ -34,13 +34,6 @@ async function setup () {
 
 	frameRate(30);
 
-	//initalize positions
-	for (var i = 0; i < data.length; i++) {
-		let d = data[i];
-		d.x0 = map(d.year, minYear, maxYear, 0, width);
-		d.x1 = map(d.year, minYear, maxYear, 0, width);
-	}
-
 	ready = true;
 }
 
@@ -52,8 +45,8 @@ function draw () {
 	}
 	background(0);
 
-	//change index every ten frames
-	if (frameCount % 10 == 0) {
+	//change index every two frames
+	if (frameCount % 2 == 0) {
 		currentIndex = constrain(currentIndex + 1, 0, data.length - 1);
 	}
 
@@ -66,10 +59,17 @@ function draw () {
 			xdiff = map(d.mean_temp, minTemp, maxTemp, -100, 100);
 		}
 
-		d.x1 = ease(d.x1, d.x0 + xdiff);
+		let x0 = map(d.year,minYear,maxYear,0,width);
+		let y0 = height;
+		let x1 = x0 + xdiff;
+		let y1 = 0;
 		stroke('white');
+
+		if(xdiff>0){
+			stroke('red');
+		}
 		strokeWeight(7);
-		line(d.x1, 0, d.x0, height);
+		line(x0,y0,x1,y1);
 	}
 
 	noStroke();
@@ -82,9 +82,4 @@ function draw () {
 
 }
 
-function ease (n, target) {
-	var easing = 0.05;
-	var d = target - n;
-	return n + d * easing;
-}
 
